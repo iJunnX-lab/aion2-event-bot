@@ -5,6 +5,15 @@ on:
     - cron: "*/5 * * * *"
 
   workflow_dispatch:
+    inputs:
+      test_notification:
+        description: "Send a Discord test notification?"
+        required: true
+        default: "no"
+        type: choice
+        options:
+          - "no"
+          - "yes"
 
 permissions:
   contents: write
@@ -30,6 +39,42 @@ jobs:
 
       - name: Install dependency
         run: pip install requests
+
+      - name: Send Discord test notification
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.test_notification == 'yes' }}
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: |
+          python - <<'PY'
+          import os
+          import requests
+
+          webhook = os.environ["DISCORD_WEBHOOK"]
+
+          payload = {
+              "username": "AION 2 Eventos",
+              "embeds": [
+                  {
+                      "title": "🧪 AION 2 Event Bot — Prueba",
+                      "description": (
+                          "✅ **¡Conexión exitosa!**\n\n"
+                          "El sistema de notificaciones de AION 2 "
+                          "está conectado correctamente con Discord.\n\n"
+                          "⚔️ ¡Listos para Atreia!"
+                      ),
+                      "color": 8207615,
+                      "footer": {
+                          "text": "AION 2 Event Notifications"
+                      }
+                  }
+              ]
+          }
+
+          response = requests.post(webhook, json=payload, timeout=20)
+          response.raise_for_status()
+
+          print("Discord test notification sent successfully!")
+          PY
 
       - name: Check events and notify Discord
         env:
