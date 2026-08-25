@@ -133,7 +133,7 @@ def maybe_notify(event_id, event_name, emoji, event_time, details=""):
     # GitHub scheduled jobs may start a few minutes late. Each notification
     # accepts a 5-minute window, while state.json prevents duplicates.
     for mins in warning_minutes:
-        if mins - 1 <= delta_min < mins + 4:
+        if mins - 5 < delta_min <= mins:
             phase = f"warn{mins}"
             key = event_key(event_id, event_time, phase)
             if not already_sent(key):
@@ -147,7 +147,7 @@ def maybe_notify(event_id, event_name, emoji, event_time, details=""):
                 )
                 mark_sent(key)
 
-    if notify_at_start and -1 <= delta_min < 4:
+    if notify_at_start and -5 <= delta_min <= 0:
         key = event_key(event_id, event_time, "start")
         if not already_sent(key):
             extra = f"\n\n{details}" if details else ""
