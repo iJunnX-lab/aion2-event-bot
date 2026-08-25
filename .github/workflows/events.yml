@@ -34,7 +34,7 @@ jobs:
       - name: Check events and notify Discord
         env:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
-        run: python event_bot.py
+        run: python aion2-discord-events/event_bot.py
 
       - name: Save duplicate-protection state
         run: |
