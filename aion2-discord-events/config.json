@@ -1,0 +1,17 @@
+{
+  "server": "TW",
+  "language": "es",
+  "role_id": "",
+  "warning_minutes": [
+    15,
+    5
+  ],
+  "notify_at_start": true,
+  "events": {
+    "spacetime_rift": true,
+    "beritra_air_raid": true,
+    "abyss_event": true,
+    "abyss_rift_zone": true,
+    "hourly_minigames": false
+  }
+}
